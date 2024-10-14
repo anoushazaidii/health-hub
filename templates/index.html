@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Health Tracker App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #f4f4f4; /* Light background */
+        }
+        .bg-primary {
+            background-color: #5a307c !important; /* Purple */
+        }
+        .bg-secondary {
+            background-color: #5a307c !important; /* Darker Purple */
+        }
+        .btn-info {
+            background-color: #6f42c1; /* Purple */
+            border-color: #6f42c1;
+        }
+        .btn-info:hover {
+            background-color: #5a307c; /* Darker Purple on hover */
+            border-color: #5a307c;
+        }
+        .btn-danger {
+            background-color: #dc3545; /* Red */
+        }
+        .btn-danger:hover {
+            background-color: #c82333; /* Darker Red on hover */
+        }
+        .greeting {
+            font-family: 'Times New Roman', Times, serif; /* Set font to Times New Roman */
+            font-size: 2.5rem; /* Size of the text */
+            font-weight: bold; /* Bold font */
+            color:#5a307c; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Greeting and Action Buttons -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="greeting">Health Hub</h1> <!-- Changed greeting -->
+            <div>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#reminderModal">
+                    Reminders
+                </button>
+                <a href="{{ url_for('history') }}" class="btn btn-info mr-2">History</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+
+        <!-- Health Tracker Form Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h2>Log Your Health Data</h2>
+            </div>
+            <div class="card-body">
+                <form id="healthForm" action="{{ url_for('log_health') }}" method="POST">
+                    <div class="form-group">
+                        <label for="bloodSugar">Blood Sugar (mg/dL):</label>
+                        <input type="number" class="form-control" id="bloodSugar" name="bloodSugar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bloodPressure">Blood Pressure (mm Hg):</label>
+                        <input type="text" class="form-control" id="bloodPressure" name="bloodPressure" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="medication">Medication Intake:</label>
+                        <input type="text" class="form-control" id="medication" name="medication" placeholder="e.g., Metformin, 500mg">
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Insights Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h2>Health Insights</h2>
+            </div>
+            <div class="card-body">
+                <h4>This Week</h4>
+                <p><strong>Average Blood Sugar:</strong> {{ weekly_averages.avg_blood_sugar }} mg/dL</p>
+                <p><strong>Average Blood Pressure:</strong> {{ weekly_averages.avg_blood_pressure }} mm Hg</p>
+                <p><strong>Medications Taken:</strong> {{ weekly_averages.medications_count }}</p>
+                <p><strong>High Blood Sugar Events:</strong> {{ weekly_averages.high_blood_sugar_count }}</p>
+                <p><strong>High Blood Pressure Events:</strong> {{ weekly_averages.high_blood_pressure_count }}</p>
+                
+                <hr>
+                
+                <h4>This Month</h4>
+                <p><strong>Average Blood Sugar:</strong> {{ monthly_averages.avg_blood_sugar }} mg/dL</p>
+                <p><strong>Average Blood Pressure:</strong> {{ monthly_averages.avg_blood_pressure }} mm Hg</p>
+                <p><strong>Medications Taken:</strong> {{ monthly_averages.medications_count }}</p>
+                <p><strong>High Blood Sugar Events:</strong> {{ monthly_averages.high_blood_sugar_count }}</p>
+                <p><strong>High Blood Pressure Events:</strong> {{ monthly_averages.high_blood_pressure_count }}</p>
+            </div>
+        </div>
+
+        <div class="modal fade" id="reminderModal" tabindex="-1" role="dialog" aria-labelledby="reminderModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reminderModalLabel">Your Reminders</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group mb-3">
+                            {% for reminder in reminders %}
+                            <li class="list-group-item">{{ reminder.text }} at {{ reminder.time }}</li>
+                            {% endfor %}
+                        </ul>
+                        <form action="{{ url_for('add_reminder') }}" method="POST" class="form-inline mb-2">
+                            <input type="text" name="reminderText" class="form-control mr-2" placeholder="Enter reminder (e.g., Medication)" required>
+                            <input type="time" name="reminderTime" class="form-control mr-2" required>
+                            <button type="submit" class="btn btn-info mt-2">Add Reminder</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

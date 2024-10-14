@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Health History</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .bg-primary {
+            background-color: #6f42c1 !important; /* Purple */
+        }
+        .bg-secondary {
+            background-color: #5a307c !important; /* Darker Purple */
+        }
+        .btn-secondary {
+            background-color: #6f42c1; /* Purple */
+            border-color: #6f42c1;
+        }
+        .btn-secondary:hover {
+            background-color: #5a307c; /* Darker Purple on hover */
+            border-color: #5a307c;
+        }
+        .thead-light {
+            background-color: #6f42c1;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="text-center mb-4" style="color: #6f42c1;">Your Health History</h1>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mb-3">Back to Dashboard</a>
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>Date</th>
+                    <th>Blood Sugar</th>
+                    <th>Blood Pressure</th>
+                    <th>Medication</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in health_logs %}
+                <tr>
+                    <td>{{ log.date }}</td>
+                    <td>{{ log.blood_sugar }} mg/dL</td>
+                    <td>{{ log.blood_pressure }} mm Hg</td>
+                    <td>{{ log.medication }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if health_logs|length == 0 %}
+        <p>No health data logged yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
